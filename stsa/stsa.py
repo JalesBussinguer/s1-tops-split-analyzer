@@ -373,6 +373,19 @@ class TopsSplitAnalyzer:
         if self._streamlit_mode is True:
             for item in self.metadata_file_list:
                 os.remove(item)
+    
+    def get_subswath_geometries(self):
+
+        '''
+        Returns S1-TOPS-SPLIT data in a geodataframe with all subswaths/bursts geometries.
+
+        :return: GeoDataFrame
+        '''
+
+        if self.df is None:
+            self._create_subswath_geometry()
+
+        return self.df
 
     def to_json(self, output_file):
         """

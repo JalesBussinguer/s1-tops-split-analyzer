@@ -10,7 +10,10 @@ STSA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 import pandas as pd
 import pytest
 
-from stsa import TopsSplitAnalyzer
+try:
+    from stsa import TopsSplitAnalyzer
+except:
+    from stsa import TopsSplitAnalyzer
 
 global data1
 global data2
@@ -159,6 +162,42 @@ def test_TopsSplitAnalyzer_cli_subswaths():
     actual = len(df)
     assert actual == expected, f'CSV length did not match expected output. Actual was {actual}. Expected is {expected}'
     os.remove(out_file)
+
+@pytest.mark.xfail
+def test_TopsSplitAnalyzer_get_subswaths_geometries():
+
+    s1 = TopsSplitAnalyzer(target_subswaths=['iw1'], polarization='vv')
+    s1.load_zip(zip_path=data2)
+
+    gdf = s1.get_subswath_geometries()
+
+    expected = 9
+    actual = len(gdf)
+
+    assert gdf is not None and len(gdf) > 0, "Fail to create subswaths geometries from xml data. Expected a non-empty geodataframe."
+    assert actual == expected, f'Geometries length did not match expected output. Actual was {actual}. Expected is {expected}'
+
+    s1 = TopsSplitAnalyzer(target_subswaths=['iw1', 'iw3'], polarization='vv')
+    s1.load_zip(zip_path=data2)
+
+    gdf = s1.get_subswath_geometries()
+
+    expected = 18
+    actual = len(gdf)
+
+    assert gdf is not None and len(gdf) > 0, "Fail to create subswaths geometries from xml data. Expected a non-empty geodataframe."
+    assert actual == expected, f'Geometries length did not match expected output. Actual was {actual}. Expected is {expected}'
+
+    s1 = TopsSplitAnalyzer(target_subswaths=['iw1', 'iw2', 'iw3'], polarization='vv')
+    s1.load_zip(zip_path=data2)
+
+    gdf = s1.get_subswath_geometries()
+
+    expected = 27
+    actual = len(gdf)
+
+    assert gdf is not None and len(gdf) > 0, "Fail to create subswaths geometries from xml data. Expected a non-empty geodataframe."
+    assert actual == expected, f'Geometries length did not match expected output. Actual was {actual}. Expected is {expected}'
 
 #################################################################################
 # Output tests
