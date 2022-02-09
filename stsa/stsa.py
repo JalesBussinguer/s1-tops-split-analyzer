@@ -72,6 +72,7 @@ class TopsSplitAnalyzer:
         self.polarization = polarization.lower()
         self._verbose = verbose
         self._streamlit_mode = streamlit_mode
+        self._df = None
 
         # Declare variables
         self._metadata = None
